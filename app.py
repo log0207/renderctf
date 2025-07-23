@@ -1,0 +1,27 @@
+from flask import Flask, send_from_directory, Response
+
+app = Flask(__name__)
+
+# Home Page
+@app.route("/")
+def index():
+    return """
+    <h2>Welcome to the CTF Challenge</h2>
+    <p>This service contains hidden flags. Try using tools like <b>nmap</b> and <b>curl</b> to find them.</p>
+    """
+
+# Nmap-style Flag (Simulated via URL endpoint)
+@app.route("/nmap-flag")
+def nmap_flag():
+    banner = "Service Running: echo-server v1.2.3\nFlag: CTF{open_port_simulated}"
+    return Response(banner, mimetype='text/plain')
+
+# Curl-style Flag (Only accessible by curl or direct access)
+@app.route("/download/flag.txt")
+def curl_flag():
+    return Response("CTF{curl_downloaded_flag}", mimetype='text/plain')
+
+# Optional: Prevent directory browsing or unknown paths
+@app.errorhandler(404)
+def not_found(e):
+    return "Nothing here! Try scanning or guessing the correct endpoint.", 404
