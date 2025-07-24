@@ -19,6 +19,14 @@ def curl_flag():
         return Response("CTF{CURL_FLAG_CRACKED_25}", mimetype='text/plain')
     return Response("403 Forbidden: Browser access not allowed", status=403)
 
+@app.route("/pass.txt")
+def curl_flaggg():
+    user_agent = request.headers.get('User-Agent', '').lower()
+    
+    if 'curl' in user_agent or 'wget' in user_agent or 'httpie' in user_agent:
+        return Response("CTF{CURL_FLAG_CRACKED}", mimetype='text/plain')
+    return Response("403 Forbidden: Browser access not allowed", status=403)
+
 # Optional: Prevent directory browsing or unknown paths
 @app.errorhandler(404)
 def not_found(e):
