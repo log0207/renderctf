@@ -1,20 +1,15 @@
-from flask import Flask, send_from_directory, Response, request
+from flask import Flask, send_from_directory, Response, request, abort
 
 app = Flask(__name__)
 
-# Home Page
-@app.route("/")
-def index():
-    return """
-    <h2>Welcome to the CTF Challenge</h2>
-    <p>This service contains hidden flags. Try using tools like <b>nmap</b> and <b>curl</b> to find them.</p>
-    """
 
-# Nmap-style Flag (Simulated via URL endpoint)
-@app.route("/nmap-flag")
-def nmap_flag():
-    banner = "Service Running: echo-server v1.2.3\nFlag: CTF{open_port_simulated}"
-    return Response(banner, mimetype='text/plain')
+@app.route("/")
+def flag():
+    user_agent = request.headers.get("User-Agent", "")
+    # Block browsers but allow nmap, nc, or curl
+    if "Mozilla" in user_agent or "Chrome" in user_agent or "Safari" in user_agent:
+        abort(403)  # Forbidden
+    return "CTF{NMAP_CRACKED_8527}"
 
 @app.route("/admin/pass.txt")
 def curl_flag():
