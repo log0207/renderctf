@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory, Response
+from flask import Flask, send_from_directory, Response, request
 
 app = Flask(__name__)
 
@@ -16,10 +16,13 @@ def nmap_flag():
     banner = "Service Running: echo-server v1.2.3\nFlag: CTF{open_port_simulated}"
     return Response(banner, mimetype='text/plain')
 
-# Curl-style Flag (Only accessible by curl or direct access)
-@app.route("/download/flag.txt")
+@app.route("/admin/pass.txt")
 def curl_flag():
-    return Response("CTF{curl_downloaded_flag}", mimetype='text/plain')
+    user_agent = request.headers.get('User-Agent', '').lower()
+    
+    if 'curl' in user_agent or 'wget' in user_agent or 'httpie' in user_agent:
+        return Response("CTF{CURL_FLAG_CRACKED_25}", mimetype='text/plain')
+    return Response("403 Forbidden: Browser access not allowed", status=403)
 
 # Optional: Prevent directory browsing or unknown paths
 @app.errorhandler(404)
