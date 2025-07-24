@@ -3,13 +3,13 @@ from flask import Flask, send_from_directory, Response, request, abort
 app = Flask(__name__)
 
 
-@app.route("/")
-def flag():
-    user_agent = request.headers.get("User-Agent", "")
-    # Block browsers but allow nmap, nc, or curl
-    if "Mozilla" in user_agent or "Chrome" in user_agent or "Safari" in user_agent:
-        abort(403)  # Forbidden
-    return "CTF{NMAP_CRACKED_8527}"
+
+@app.route('/')
+def nmap_flag():
+    ua = request.headers.get("User-Agent", "")
+    if "Mozilla" in ua or "Chrome" in ua or "Safari" in ua:
+        abort(403)
+    return Response("CTF{NMAP_CRACKED_8527}\n", mimetype='text/plain')
 
 @app.route("/admin/pass.txt")
 def curl_flag():
